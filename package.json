@@ -4,6 +4,7 @@
   "description": "",
   "main": "employee-tracker_db.js",
   "scripts": {
+    "start": "employee-tracker_db.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
