@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS employee-tracker_db;
-CREATE DATABASE employee-tracker_db;
-USE employee-tracker_db;
+DROP DATABASE IF EXISTS employee_tracker_db;
+CREATE DATABASE employee_tracker_db;
+USE employee_tracker_db;
 
 CREATE TABLE department (
   id INT NOT NULL AUTO_INCREMENT,
@@ -26,13 +26,14 @@ CREATE TABLE employee (
 );
 
 INSERT INTO department(id, department_name)
-VALUES ("Dental")
+VALUES ("Pediatrics"), ("General"), ("Cardiothoracic"),
+("Neurosurgery"),("Plastic Surgery"), ("Trauma")
 
 INSERT INTO role(title, salary, department_id)
-VALUES ("Dental Hygienist", 70000, 89)
+VALUES ( "Pediatric Surgeon", $ , ), ("",,)
 
 INSERT INTO employee(first_name, last_name, role_id, manager_id)
-VALUES ("Kim", "Marziali", 1)
+VALUES ("", "", 1)
 
 
 SELECT department,title, salary
