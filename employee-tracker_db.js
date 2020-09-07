@@ -52,17 +52,16 @@ const addEmployee = [
   {
     type: "list",
     message: "What is the employee's role?",
-    choices: ["Pediatric Surgeon", "General Surgeon", "Cardiothoracic Surgeon", 
-    "Neurosurgeon", "Plastic Surgeon","Trauma Surgeon"],
+    choices: ["Pediatric Surgeon", "General Surgeon", "Cardiothoracic Surgeon",
+      "Neurosurgeon", "Plastic Surgeon", "Trauma Surgeon"],
     name: "emRole"
   },
   {
     type: "list",
     message: "Who is the employee's manager?",
-    choices: ["Miranda Bailey", "Derek Shepherd", 
-    "Richard Webber", "Christina Yang"],
+    choices: ["Miranda Bailey", "Richard Webber"],
     name: "emManager"
-    
+
   }
 ];
 
@@ -97,8 +96,8 @@ const viewDepartment = [
   {
     type: "list",
     message: " Which department?",
-    choices: ["Pediatrics","General","Cardiothoracic",
-    "Neurosurgery","Plastic Surgery","Trauma"],
+    choices: ["Pediatrics", "General", "Cardiothoracic",
+      "Neurosurgery", "Plastic Surgery", "Trauma"],
     name: "whichDep"
   }
 ];
@@ -106,8 +105,8 @@ const viewRole = [
   {
     type: "list",
     message: "Which role?",
-    choices: ["Pediatric Surgeon", "General Surgeon", "Cardiothoracic Surgeon", 
-    "Neurosurgeon", "Plastic Surgeon","Trauma Surgeon"],
+    choices: ["Pediatric Surgeon", "General Surgeon", "Cardiothoracic Surgeon",
+      "Neurosurgeon", "Plastic Surgeon", "Trauma Surgeon"],
     name: "whichRole"
   }
 
@@ -116,15 +115,15 @@ const viewRole = [
 const updateEmployee = [{
   type: "list",
   message: " Which employee do you want to update?",
-  choices: ["Alex Karev", "Meredith Grey","Maggie Pierce",
-  "Amelia Shepherd" ,"Jackson Avery", "Owen Hunt"],
+  choices: ["Alex Karev", "Meredith Grey", "Maggie Pierce",
+    "Amelia Shepherd", "Jackson Avery", "Owen Hunt"],
   name: "emUpdate"
 },
 {
   type: "list",
   message: "Which role is the employee switching to?",
-  choices: ["Pediatric Surgeon", "General Surgeon", "Cardiothoracic Surgeon", 
-  "Neurosurgeon", "Plastic Surgeon","Trauma Surgeon"],
+  choices: ["Pediatric Surgeon", "General Surgeon", "Cardiothoracic Surgeon",
+    "Neurosurgeon", "Plastic Surgeon", "Trauma Surgeon"],
   name: "roleSwitch"
 }
 ];
@@ -172,72 +171,75 @@ function afterConnection() {
 function employeeAdd() {
   inquirer.prompt(addEmployee).then(function (info) {
     console.log(info)
+    console.table(res)
 
-    connection.query("SELECT * FROM role", (err,res) => {
-    console.log(res)
-    const filteredArray = res.filter(val => info.emRole === val.title
-    )
-    console.log(filteredArray)
-    connection.query("INSERT INTO employee SET ?",
-      {
-        first_name: info.emFirst,
-        last_name: info.emLast,
-        role_id: filteredArray[0].id
-        // manager_id:,
-
-
-      }, (err, res) => {
-        if (err) throw err
-        afterConnection()
-      })
-  })
-},
-
-
- function viewEmployee(){
-    connection.query("SELECT * FROM employee", (err, res) => {
-      if(err) throw err;
-      console.table(res)
-      afterConnection();
-    })
-  },
-
-  function allDepartments(){
-    connection.query("SELECT * FROM department", (err, res) => {
-      if(err) throw err;
-      console.table(res)
-      afterConnection();
-    })
-  },
-
-  function allRoles(){
     connection.query("SELECT * FROM role", (err, res) => {
-      if(err) throw err;
+      console.log(res)
+      const filteredArray = res.filter(val => info.emRole === val.title
+      )
+      console.log(filteredArray)
       console.table(res)
-      afterConnection();
-    })
-  },
+      connection.query("INSERT INTO employee SET ?",
+        {
+          first_name: info.emFirst,
+          last_name: info.emLast,
+          role_id: filteredArray[0].id
+          // manager_id:,
 
-  function roleAdd(){
-    connection.query("SELECT * FROM employee", (err, res) => {
-      if(err) throw err;
-      console.table(res)
-      afterConnection();
-    })
-  },
 
-  function vdepartmentAdd(){
-    connection.query("SELECT * FROM employee", (err, res) => {
-      if(err) throw err;
-      console.table(res)
-      afterConnection();
+        }, (err, res) => {
+          if (err) throw err
+          afterConnection()
+        })
     })
-  },
+  })
+}
 
-  function updateEmployeeRole(){
-    connection.query("SELECT * FROM employee", (err, res) => {
-      if(err) throw err;
-      console.table(res)
-      afterConnection();
-    })
-  }
+
+function viewEmployee() {
+  connection.query("SELECT * FROM employee", (err, res) => {
+    if (err) throw err;
+    console.table(res)
+    afterConnection();
+  })
+}
+
+function allDepartments() {
+  connection.query("SELECT * FROM department", (err, res) => {
+    if (err) throw err;
+    console.table(res)
+    afterConnection();
+  })
+}
+
+function allRoles() {
+  connection.query("SELECT * FROM role", (err, res) => {
+    if (err) throw err;
+    console.table(res)
+    afterConnection();
+  })
+}
+
+function roleAdd() {
+  connection.query("SELECT * FROM employee", (err, res) => {
+    if (err) throw err;
+    console.table(res)
+    afterConnection();
+  })
+}
+
+function departmentAdd() {
+  connection.query("SELECT * FROM employee", (err, res) => {
+    if (err) throw err;
+    console.table(res)
+    afterConnection();
+  })
+}
+
+function updateEmployeeRole() {
+  connection.query("SELECT * FROM employee", (err, res) => {
+    if (err) throw err;
+    console.table(res)
+    afterConnection();
+  })
+}
