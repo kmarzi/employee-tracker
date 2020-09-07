@@ -2,7 +2,7 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 const mysql = require("mysql");
 const cTable = require("console.table");
-const { allowedNodeEnvironmentFlags } = require("process");
+// const { allowedNodeEnvironmentFlags } = require("process");
 
 // const generateMarkdown = require("./generateMarkdown");
 
@@ -50,15 +50,19 @@ const addEmployee = [
     name: "emLast"
   },
   {
-    type: "input",
+    type: "list",
     message: "What is the employee's role?",
+    choices: ["Pediatric Surgeon", "General Surgeon", "Cardiothoracic Surgeon", 
+    "Neurosurgeon", "Plastic Surgeon","Trauma Surgeon"],
     name: "emRole"
   },
   {
     type: "list",
     message: "Who is the employee's manager?",
-    name: "emManager",
-    choices: ""
+    choices: ["Miranda Bailey", "Derek Shepherd", 
+    "Richard Webber", "Christina Yang"],
+    name: "emManager"
+    
   }
 ];
 
@@ -70,12 +74,12 @@ const addRole = [
     name: "roleTitle"
   },
   {
-    type: "list",
+    type: "input",
     message: " What is the salary of this role?",
     name: "salaryRole"
   },
   {
-    type: "list",
+    type: "input",
     message: "What department is this role in?",
     name: "depRole"
   }
@@ -93,13 +97,17 @@ const viewDepartment = [
   {
     type: "list",
     message: " Which department?",
+    choices: ["Pediatrics","General","Cardiothoracic",
+    "Neurosurgery","Plastic Surgery","Trauma"],
     name: "whichDep"
   }
 ];
 const viewRole = [
   {
     type: "list",
-    message: " Which role?",
+    message: "Which role?",
+    choices: ["Pediatric Surgeon", "General Surgeon", "Cardiothoracic Surgeon", 
+    "Neurosurgeon", "Plastic Surgeon","Trauma Surgeon"],
     name: "whichRole"
   }
 
@@ -108,11 +116,15 @@ const viewRole = [
 const updateEmployee = [{
   type: "list",
   message: " Which employee do you want to update?",
+  choices: ["Alex Karev", "Meredith Grey","Maggie Pierce",
+  "Amelia Shepherd" ,"Jackson Avery", "Owen Hunt"],
   name: "emUpdate"
 },
 {
   type: "list",
   message: "Which role is the employee switching to?",
+  choices: ["Pediatric Surgeon", "General Surgeon", "Cardiothoracic Surgeon", 
+  "Neurosurgeon", "Plastic Surgeon","Trauma Surgeon"],
   name: "roleSwitch"
 }
 ];
@@ -148,7 +160,7 @@ function afterConnection() {
       connection.end();
     }
   })
-}
+};
 
 // function afterConnection() {
 //   inquirer.query("SELECT * FROM songs", function(err, res) {
@@ -163,14 +175,14 @@ function employeeAdd() {
 
     connection.query("SELECT * FROM role", (err,res) => {
     console.log(res)
-    const filteredArry = res.filter(val => info.emRole === val.title
+    const filteredArray = res.filter(val => info.emRole === val.title
     )
     console.log(filteredArray)
     connection.query("INSERT INTO employee SET ?",
       {
-        first_name: data.emFirst,
-        last_name: data.emLast,
-        role_id: filteredArry[0].id
+        first_name: info.emFirst,
+        last_name: info.emLast,
+        role_id: filteredArray[0].id
         // manager_id:,
 
 
@@ -179,31 +191,32 @@ function employeeAdd() {
         afterConnection()
       })
   })
+},
 
 
-  function viewEmployee(){
+ function viewEmployee(){
     connection.query("SELECT * FROM employee", (err, res) => {
       if(err) throw err;
       console.table(res)
       afterConnection();
     })
-  }
+  },
 
   function allDepartments(){
-    connection.query("SELECT * FROM employee", (err, res) => {
+    connection.query("SELECT * FROM department", (err, res) => {
       if(err) throw err;
       console.table(res)
       afterConnection();
     })
-  }
+  },
 
   function allRoles(){
-    connection.query("SELECT * FROM employee", (err, res) => {
+    connection.query("SELECT * FROM role", (err, res) => {
       if(err) throw err;
       console.table(res)
       afterConnection();
     })
-  }
+  },
 
   function roleAdd(){
     connection.query("SELECT * FROM employee", (err, res) => {
@@ -211,14 +224,15 @@ function employeeAdd() {
       console.table(res)
       afterConnection();
     })
-  }
+  },
+
   function vdepartmentAdd(){
     connection.query("SELECT * FROM employee", (err, res) => {
       if(err) throw err;
       console.table(res)
       afterConnection();
     })
-  }
+  },
 
   function updateEmployeeRole(){
     connection.query("SELECT * FROM employee", (err, res) => {
@@ -227,35 +241,3 @@ function employeeAdd() {
       afterConnection();
     })
   }
-
-
-
-
-
-
-
-
-
-
-
-//function for prompting questions
-// function init() {
-//   inquirer.prompt(questions).then(answers => {
-//     console.log(JSON.stringify(answers, null, 2));
-
-//     // 1. pass answers into generateMarkdown() and save result in a variable
-//     const md = generateMarkdown(answers);
-//     console.log(md);
-
-//     fs.writeFile("README1.md", md, err => {
-
-//     }
-
-//       // 2. pass result from line above into writeFile()
-//       //writeToFile("README.md", md);
-//     )
-//   });
-// }
-
-// // function call to initialize program
-// init();
