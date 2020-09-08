@@ -2,6 +2,7 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 const mysql = require("mysql");
 const cTable = require("console.table");
+const { title } = require("process");
 // const { allowedNodeEnvironmentFlags } = require("process");
 
 // const generateMarkdown = require("./generateMarkdown");
@@ -76,11 +77,6 @@ const addRole = [
     type: "input",
     message: " What is the salary of this role?",
     name: "salaryRole"
-  },
-  {
-    type: "input",
-    message: "What department is this role in?",
-    name: "depRole"
   }
 ];
 
@@ -116,7 +112,7 @@ const updateEmployee = [{
   type: "list",
   message: " Which employee do you want to update?",
   choices: ["Alex Karev", "Meredith Grey", "Maggie Pierce",
-    "Amelia Shepherd", "Jackson Avery", "Owen Hunt"],
+    "Amelia Shepherd", "Jackson Avery", "Owen Hunt", "Richard Webber", "Miranda Bailey"],
   name: "emUpdate"
 },
 {
@@ -141,7 +137,7 @@ function afterConnection() {
     const choice = userChoice.main;
 
     if (choice === "View All Employees") {
-      viewEmployees();
+      viewEmployee();
     } else if (choice === "View all employee by department") {
       allDepartments();
     } else if (choice === "View All Employees by Role") {
@@ -170,15 +166,10 @@ function afterConnection() {
 // }
 function employeeAdd() {
   inquirer.prompt(addEmployee).then(function (info) {
-    console.log(info)
-    console.table(res)
 
     connection.query("SELECT * FROM role", (err, res) => {
-      console.log(res)
       const filteredArray = res.filter(val => info.emRole === val.title
       )
-      console.log(filteredArray)
-      console.table(res)
       connection.query("INSERT INTO employee SET ?",
         {
           first_name: info.emFirst,
@@ -189,12 +180,12 @@ function employeeAdd() {
 
         }, (err, res) => {
           if (err) throw err
+          console.log("Employee Added")
           afterConnection()
         })
     })
   })
 }
-
 
 function viewEmployee() {
   connection.query("SELECT * FROM employee", (err, res) => {
@@ -221,18 +212,33 @@ function allRoles() {
 }
 
 function roleAdd() {
-  connection.query("SELECT * FROM employee", (err, res) => {
-    if (err) throw err;
-    console.table(res)
-    afterConnection();
-  })
+ inquirer.prompt(addRole).then(info => {
+  console.log(info)
+   connection.query("INSERT INTO role SET ?",
+   {
+     title: info.roleTitle,
+     salary: info.salaryRole,
+   }, 
+   (err, res) => {
+     if (err) throw err;
+     console.table(res)
+     afterConnection();
+   })
+ }) 
 }
 
 function departmentAdd() {
-  connection.query("SELECT * FROM employee", (err, res) => {
-    if (err) throw err;
-    console.table(res)
-    afterConnection();
+  inquirer.prompt(addDepartment).then(info => {
+    console.log(info)
+    connection.query("INSERT INTO department SET ?", 
+    {
+      department_name: info.depTitle
+    },
+    (err, res) => {
+      if (err) throw err;
+      console.table(res)
+      afterConnection();
+    })
   })
 }
 
